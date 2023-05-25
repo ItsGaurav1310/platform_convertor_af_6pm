@@ -87,8 +87,8 @@ class _HomePageState extends State<HomePage> {
             ),
             Text(
               "${Provider.of<PlatformProvider>(context, listen: true).initialDate.day}/"
-                  "${Provider.of<PlatformProvider>(context, listen: true).initialDate.month}/"
-                  "${Provider.of<PlatformProvider>(context, listen: true).initialDate.year}",
+              "${Provider.of<PlatformProvider>(context, listen: true).initialDate.month}/"
+              "${Provider.of<PlatformProvider>(context, listen: true).initialDate.year}",
               style: TextStyle(fontSize: 25),
             ),
             SizedBox(
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
             ),
             CupertinoButton(
                 color: CupertinoColors.activeOrange,
-                child: Text("Cupertino Button"),
+                child: Text("Pick a Date"),
                 onPressed: () {
                   showCupertinoModalPopup(
                       context: context,
@@ -143,6 +143,94 @@ class _HomePageState extends State<HomePage> {
                         );
                       });
                 }),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "${Provider.of<PlatformProvider>(context, listen: true).initialDate.hour}:"
+              "${Provider.of<PlatformProvider>(context, listen: true).initialDate.minute}",
+              style: TextStyle(fontSize: 25),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            CupertinoButton(
+                color: CupertinoColors.activeOrange,
+                child: Text("Pick A Time"),
+                onPressed: () {
+                  showCupertinoModalPopup(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoActionSheet(
+                          title: Text(
+                            "Pick a Date From Here",
+                            style: TextStyle(fontSize: 25),
+                          ),
+                          message: Container(
+                            height: 200,
+                            color: Colors.transparent,
+                            child: CupertinoDatePicker(
+                              onDateTimeChanged: (DateTime date) {
+                                Provider.of<PlatformProvider>(context,
+                                        listen: false)
+                                    .pickDate(date);
+                              },
+                              initialDateTime: Provider.of<PlatformProvider>(
+                                      context,
+                                      listen: true)
+                                  .initialDate,
+                              mode: CupertinoDatePickerMode.time,
+                              use24hFormat: true,
+                            ),
+                          ),
+                          actions: [
+                            CupertinoActionSheetAction(
+                                isDefaultAction: true,
+                                onPressed: () {},
+                                child: Text("Go to settings")),
+                            CupertinoActionSheetAction(
+                                onPressed: () {},
+                                child: Text("Share on Email")),
+                            CupertinoActionSheetAction(
+                                onPressed: () {},
+                                child: Text("Go to home Screen")),
+                            CupertinoActionSheetAction(
+                                isDestructiveAction: true,
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Exit")),
+                          ],
+                        );
+                      });
+                }),
+            SizedBox(
+              height: 20,
+            ),
+            CupertinoButton(
+                child: Text("Show Alert"),
+                onPressed: () {
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => CupertinoAlertDialog(
+                      title: Text("Alert!....."),
+                      content: Text("You Have to Verify Your Identity"),
+                      actions: [
+                        CupertinoDialogAction(
+                          child: Text("Verify"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        CupertinoDialogAction(
+                          child: Text("Cancel"),
+                          onPressed: () {},
+                          isDestructiveAction: true,
+                        )
+                      ],
+                    ),
+                  );
+                })
           ],
         ),
       ),

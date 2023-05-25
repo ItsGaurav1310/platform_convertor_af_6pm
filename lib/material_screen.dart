@@ -14,6 +14,7 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
+  PageController pageController = PageController();
   GlobalKey<ScaffoldState> scaffoldkey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -32,23 +33,65 @@ class _DetailState extends State<Detail> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (defaultTargetPlatform == TargetPlatform.android) ...[
-              CircularProgressIndicator(),
-              SizedBox(
-                height: 50,
-              ),
-              Text("Android App"),
-              SizedBox(
-                height: 50,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    scaffoldkey.currentState!
-                        .showBottomSheet((context) => Container(
+      bottomNavigationBar: BottomNavigationBar(
+        iconSize: 35,
+        type: BottomNavigationBarType.shifting,
+        backgroundColor: Colors.black26,
+        selectedFontSize: 18,
+        selectedItemColor: Colors.red,
+        unselectedItemColor: Colors.yellow,
+        currentIndex: Provider.of<PlatformProvider>(context).selected,
+        onTap: (val) {
+          Provider.of<PlatformProvider>(
+            context,
+            listen: false,
+          ).selectedPage(val);
+          pageController.animateToPage(
+            val,
+            duration: Duration(milliseconds: 400),
+            curve: Curves.easeIn,
+          );
+        },
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.date_range_outlined),
+            label: "Date",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.watch),
+            label: "Time",
+          ),
+        ],
+      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     pageController.animateToPage(2,
+      //         duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+      //   },
+      //   child: Icon(Icons.arrow_right),
+      // ),
+      body: PageView(
+        controller: pageController,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          backgroundColor: Colors.greenAccent,
+                          barrierColor: Colors.yellow.withOpacity(0.2),
+                          elevation: 50,
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return Container(
                               height: 200,
                               child: Column(
                                 children: [
@@ -63,44 +106,46 @@ class _DetailState extends State<Detail> {
                                   )
                                 ],
                               ),
-                            ));
-                  },
-                  child: Text("Bottom Sheet")),
-              ElevatedButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        backgroundColor: Colors.greenAccent,
-                        barrierColor: Colors.yellow.withOpacity(0.2),
-                        elevation: 50,
-                        isDismissible: false,
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                            height: 200,
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  title: Text("Go to Home"),
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
+                            );
+                          });
+                    },
+                    child: Text("Modal Bottom Sheet")),
+                ElevatedButton(
+                    onPressed: () {
+                      scaffoldkey.currentState!
+                          .showBottomSheet((context) => Container(
+                                height: 200,
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text("Go to Home"),
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: Text("Go to Settings"),
+                                    )
+                                  ],
                                 ),
-                                ListTile(
-                                  title: Text("Go to Settings"),
-                                )
-                              ],
-                            ),
-                          );
-                        });
-                  },
-                  child: Text("Modal Bottom Sheet")),
-              Text(
-                "${Provider.of<PlatformProvider>(context).initialDate.day}/"
-                "${Provider.of<PlatformProvider>(context).initialDate.month}/"
-                "${Provider.of<PlatformProvider>(context).initialDate.year}",
-                style: TextStyle(fontSize: 25),
-              ),
-              IconButton(
+                              ));
+                    },
+                    child: Text("Bottom Sheet")),
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "${Provider.of<PlatformProvider>(context).initialDate.day}/"
+                  "${Provider.of<PlatformProvider>(context).initialDate.month}/"
+                  "${Provider.of<PlatformProvider>(context).initialDate.year}",
+                  style: TextStyle(fontSize: 25),
+                ),
+                IconButton(
                   onPressed: () async {
                     DateTime? pickedDate = await showDatePicker(
                       context: context,
@@ -118,32 +163,91 @@ class _DetailState extends State<Detail> {
                   icon: Icon(
                     Icons.date_range_outlined,
                     size: 35,
-                  ))
-            ] else if (defaultTargetPlatform == TargetPlatform.windows) ...[
-              CupertinoActivityIndicator(
-                radius: 50,
-                color: CupertinoColors.destructiveRed,
-                animating: true,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Text("Hello Ios"),
-              SizedBox(
-                height: 50,
-              ),
-              CupertinoButton(
-                  color: CupertinoColors.activeOrange,
-                  child: Text("Cupertino Button"),
-                  onPressed: () {}),
-              CupertinoNavigationBarBackButton(
-                color: CupertinoColors.systemPurple,
-                onPressed: () {},
-              )
-            ]
-          ],
-        ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                    "${Provider.of<PlatformProvider>(context).initialTime.hour}"
+                    ":${Provider.of<PlatformProvider>(context).initialTime.minute}",
+                    style: TextStyle(fontSize: 25)),
+                IconButton(
+                  onPressed: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime:
+                          Provider.of<PlatformProvider>(context, listen: false)
+                              .initialTime,
+                      cancelText: "Go Back",
+                      confirmText: "Pick a Time",
+                    );
+                    Provider.of<PlatformProvider>(context, listen: false)
+                        .pickTime(pickedTime!);
+                  },
+                  icon: Icon(
+                    Icons.watch,
+                    size: 35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
+      // body: PageView.builder(
+      //     // itemCount: 5,
+      //     itemBuilder: (BuildContext context, i) {
+      //   return Center(
+      //     child: Text("Page ${i + 1} "),
+      //   );
+      // }),
+      // body: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       if (defaultTargetPlatform == TargetPlatform.android) ...[
+      //         CircularProgressIndicator(),
+      //         SizedBox(
+      //           height: 50,
+      //         ),
+      //         Text("Android App"),
+      //         SizedBox(
+      //           height: 50,
+      //         ),
+      //
+      //
+      //
+      //       ] else if (defaultTargetPlatform == TargetPlatform.windows) ...[
+      //         CupertinoActivityIndicator(
+      //           radius: 50,
+      //           color: CupertinoColors.destructiveRed,
+      //           animating: true,
+      //         ),
+      //         SizedBox(
+      //           height: 50,
+      //         ),
+      //         Text("Hello Ios"),
+      //         SizedBox(
+      //           height: 50,
+      //         ),
+      //         CupertinoButton(
+      //             color: CupertinoColors.activeOrange,
+      //             child: Text("Cupertino Button"),
+      //             onPressed: () {}),
+      //         CupertinoNavigationBarBackButton(
+      //           color: CupertinoColors.systemPurple,
+      //           onPressed: () {},
+      //         )
+      //       ]
+      //     ],
+      //   ),
+      // ),
     );
   }
 }
