@@ -3,8 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'Globals.dart';
-import 'Providers/platform_provider.dart';
+import '../Providers/platform_provider.dart';
 
 class Detail extends StatefulWidget {
   const Detail({Key? key}) : super(key: key);
