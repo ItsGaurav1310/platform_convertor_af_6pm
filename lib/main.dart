@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:platform_convertor/Views/material_screen.dart';
 
 import 'Views/cupertino_screen.dart';
+import 'Views/sliver_screen.dart';
 
 void main() {
   runApp(
@@ -18,7 +19,7 @@ void main() {
                 theme: ThemeData(useMaterial3: true),
                 debugShowCheckedModeBanner: false,
                 //
-                home: const Detail())
+                home: Sliver_Page())
             : const CupertinoApp(
                 debugShowCheckedModeBanner: false,
                 home: HomePage(),
