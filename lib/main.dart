@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:platform_convertor/Views/material_screen.dart';
 
 import 'Views/cupertino_screen.dart';
+import 'Views/cupertino_sliverscreen.dart';
 import 'Views/sliver_screen.dart';
 
 void main() {
@@ -22,7 +23,7 @@ void main() {
                 home: Sliver_Page())
             : const CupertinoApp(
                 debugShowCheckedModeBanner: false,
-                home: HomePage(),
+                home: Cupertino_sliver_screen(),
               ),
       ),
     ),
